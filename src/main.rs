@@ -1,3 +1,16 @@
+use clap::Parser;
+
+/// TODO
+#[derive(Parser, Debug)]
+#[command(version)]
+struct Args {
+    #[arg(short, long)]
+    file_type: String,
+}
+
 fn main() {
-    println!("Hello, world!");
+    let args = Args::parse();
+
+    
+    println!("{:?}", args);
 }
