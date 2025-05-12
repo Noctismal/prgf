@@ -2,8 +2,6 @@ use std::{fs, io};
 
 use clap::Parser;
 
-pub mod prfg_err;
-use prfg_err::PrgfError;
 
 /// Create a basic programming file
 #[derive(Parser, Debug)]
@@ -27,6 +25,7 @@ impl Args {
 
 // holds information that the program needs to 
 // use such as the contents that need to go into the file
+#[derive(Debug)]
 pub struct ClInfo {
     args: Args,
     contents: Vec<String>
@@ -60,9 +59,21 @@ impl ClInfo {
         Ok(contents)
     }
 
-    pub fn build() {
+    pub fn build() -> Result<ClInfo, io::Error> {
         // get command line arguments
         let args = Args::build();
+
+        let contents: Vec<String> = match ClInfo::get_contents(&args.get()) {
+            Ok(result) => result,
+            Err(err) => return Err(err)
+        };
+
+        Ok(
+            ClInfo { 
+                args, 
+                contents
+            }
+        ) 
     }
 }
 
