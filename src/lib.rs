@@ -6,7 +6,7 @@ use clap::Parser;
 /// Create a basic programming file
 #[derive(Parser, Debug)]
 #[command(version, after_help = "Supported languages\n\tc\n\trust")]
-pub struct Args {
+struct Args {
     /// name of the language you wnat to make a file for
     #[arg(short, long)]
     file_type: String,    
@@ -17,10 +17,6 @@ impl Args {
     fn build() -> Args {
         Args::parse()
     }
-
-    fn get(&self) -> &str {
-        &self.file_type
-    }
 }
 
 // holds information that the program needs to 
@@ -28,11 +24,12 @@ impl Args {
 #[derive(Debug)]
 pub struct ClInfo {
     args: Args,
+    extension: String,
     contents: Vec<String>
 }
 
 impl ClInfo {
-    fn get_contents(file_type: &str) -> Result<Vec<String>, io::Error> {
+    fn build_contents(file_type: &str) -> Result<Vec<String>, io::Error> {
         // contents should be in this file, if not return ft_file_null
         let file = fs::read_to_string("ft_types.txt")?;
         
@@ -59,11 +56,39 @@ impl ClInfo {
         Ok(contents)
     }
 
+    fn build_extension(file_type: &str) -> Result<String, io::Error> {
+        let file = fs::read_to_string("ft_extensions.txt")?;
+        
+
+        let mut flag = false;
+
+        let mut extension = String::new();
+
+        for line in file.lines() {
+            if line.contains(file_type) {
+                flag = true;
+                continue;;
+            }
+            
+            if flag == true {
+                extension = line.to_string();
+                break;
+            }
+        }
+
+        return Ok(extension)
+    }
+
     pub fn build() -> Result<ClInfo, io::Error> {
         // get command line arguments
         let args = Args::build();
 
-        let contents: Vec<String> = match ClInfo::get_contents(&args.get()) {
+        let contents: Vec<String> = match ClInfo::build_contents(&args.file_type) {
+            Ok(result) => result,
+            Err(err) => return Err(err)
+        };
+
+        let extension = match ClInfo::build_extension(&args.file_type) {
             Ok(result) => result,
             Err(err) => return Err(err)
         };
@@ -71,11 +96,32 @@ impl ClInfo {
         Ok(
             ClInfo { 
                 args, 
-                contents
+                contents,
+                extension,
             }
         ) 
     }
+
+    pub fn get_arg(&self) -> String {
+        self.args.file_type.to_string()
+    }
+
+    pub fn get_contents(&self) -> &Vec<String> {
+        &self.contents
+    }
 }
+
+pub fn write_basic_file(info: &ClInfo) -> Result<(), io::Error> {
+    
+
+    Ok(())
+}
+
+
+
+
+
+
 
 #[cfg(test)]
 mod tests {
@@ -88,7 +134,7 @@ mod tests {
 
         let result = vec!["fn main() {", "    println!(\"Test\\n\");", "}"];
 
-        let contents = ClInfo::get_contents(&file_type).unwrap();
+        let contents = ClInfo::build_contents(&file_type).unwrap();
 
         assert_eq!(contents, result);
     }
@@ -106,7 +152,7 @@ mod tests {
                                              "    return 0;",
                                              "}"];
 
-        let contents = ClInfo::get_contents(&file_type).unwrap();
+        let contents = ClInfo::build_contents(&file_type).unwrap();
 
         assert_eq!(contents, result);
     }
