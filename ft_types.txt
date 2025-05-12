@@ -1,0 +1,13 @@
+// c
+#include <stdio.h>
+
+int main(void) {
+    printf("Test\n");
+
+    return 0;
+}
+// rust
+fn main() {
+    println!("Test\n");
+}
+//

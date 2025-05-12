@@ -1,4 +1,9 @@
+use std::{fs, io};
+
 use clap::Parser;
+
+pub mod prfg_err;
+use prfg_err::PrgfError;
 
 /// Create a basic programming file
 #[derive(Parser, Debug)]
@@ -11,7 +16,88 @@ pub struct Args {
 
 impl Args {
     // builds the arguments into the struct
-    pub fn build() -> Args {
+    fn build() -> Args {
         Args::parse()
     }
+
+    fn get(&self) -> &str {
+        &self.file_type
+    }
+}
+
+// holds information that the program needs to 
+// use such as the contents that need to go into the file
+pub struct ClInfo {
+    args: Args,
+    contents: Vec<String>
+}
+
+impl ClInfo {
+    fn get_contents(file_type: &str) -> Result<Vec<String>, io::Error> {
+        // contents should be in this file, if not return ft_file_null
+        let file = fs::read_to_string("ft_types.txt")?;
+        
+        let ft: String  = "// ".to_owned() + file_type;
+
+        // holds the contents
+        let mut contents: Vec<String> = vec![];
+
+        let mut flag = false;
+
+        for line in file.lines() {
+            if line == ft {
+                flag = true;
+                continue;
+            }
+
+            if flag == true {
+                if line.contains("//") && line != ft {
+                    break;
+                }
+                contents.push(line.to_string());
+            }
+        }
+        Ok(contents)
+    }
+
+    pub fn build() {
+        // get command line arguments
+        let args = Args::build();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // test if contents get correct data from the file for rust
+    #[test]
+    fn content_test_rust() {
+        let file_type = String::from("rust");
+
+        let result = vec!["fn main() {", "    println!(\"Test\\n\");", "}"];
+
+        let contents = ClInfo::get_contents(&file_type).unwrap();
+
+        assert_eq!(contents, result);
+    }
+
+    // same as above but for c
+    #[test]
+    fn content_test_c() {
+        let file_type = String::from("c");
+
+        let result = vec!["#include <stdio.h>",
+                                             "", 
+                                             "int main(void) {",
+                                             "    printf(\"Test\\n\");",
+                                             "",
+                                             "    return 0;",
+                                             "}"];
+
+        let contents = ClInfo::get_contents(&file_type).unwrap();
+
+        assert_eq!(contents, result);
+    }
+
 }
