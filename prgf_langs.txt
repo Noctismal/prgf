@@ -1,4 +1,4 @@
-// c
+// c e= .c
 #include <stdio.h>
 
 int main(void) {
@@ -6,7 +6,7 @@ int main(void) {
 
     return 0;
 }
-// rust
+// rust e= .rs
 fn main() {
     println!("Test\n");
 }
