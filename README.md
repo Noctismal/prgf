@@ -1,5 +1,10 @@
 # prgf
 
+[!NOTE]
+prgf comes pre installed with formatting for c, cpp, rust, java.
+To include more add the extension to use in ft_extensions.txt and what to have in the file
+in ft_types.txt
+
 Prgf aims to be an easiy to modify command line tool for creating basic        
 programming files.
 
