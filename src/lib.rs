@@ -1,5 +1,4 @@
 use std::{fs, io};
-use std::fmt::Display;
 
 use clap::Parser;
 
