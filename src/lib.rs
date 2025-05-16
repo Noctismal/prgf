@@ -1,4 +1,5 @@
 use std::{fs, io};
+use std::fmt::Display;
 
 use clap::Parser;
 
@@ -59,18 +60,21 @@ impl ClInfo {
     fn build_extension(file_type: &str) -> Result<String, io::Error> {
         let file = fs::read_to_string("ft_extensions.txt")?;
         
+        let ft: String = "// ".to_owned() + file_type;
 
         let mut flag = false;
 
         let mut extension = String::new();
+    
+        println!("{file_type}");
 
         for line in file.lines() {
-            if line.contains(file_type) {
+            if line == ft {
                 flag = true;
-                continue;;
+                continue;
             }
             
-            if flag == true {
+            if flag {
                 extension = line.to_string();
                 break;
             }
@@ -83,15 +87,9 @@ impl ClInfo {
         // get command line arguments
         let args = Args::build();
 
-        let contents: Vec<String> = match ClInfo::build_contents(&args.file_type) {
-            Ok(result) => result,
-            Err(err) => return Err(err)
-        };
+        let contents: Vec<String> = ClInfo::build_contents(&args.file_type)?;
 
-        let extension = match ClInfo::build_extension(&args.file_type) {
-            Ok(result) => result,
-            Err(err) => return Err(err)
-        };
+        let extension = ClInfo::build_extension(&args.file_type)?;
 
         Ok(
             ClInfo { 
@@ -102,26 +100,45 @@ impl ClInfo {
         ) 
     }
 
-    pub fn get_arg(&self) -> String {
-        self.args.file_type.to_string()
+    pub fn get_arg(&self) -> &str {
+        &self.args.file_type
     }
 
     pub fn get_contents(&self) -> &Vec<String> {
         &self.contents
     }
+
+    pub fn get_extension(&self) -> &str {
+        &self.extension
+    }
 }
 
-pub fn write_basic_file(info: &ClInfo) -> Result<(), io::Error> {
-    
+fn write_basic_file(info: &ClInfo) -> Result<(), io::Error> {
+    let file_name = "main".to_owned() + info.get_extension();
+
+    println!("{file_name}");
+
+    let contents = info.get_contents();
+
+    let mut new_conts = String::new();
+
+    for line in contents {
+        new_conts.push_str(line);
+        new_conts.push_str("\n");
+    }
+
+    fs::write(&file_name, new_conts)?;
+
 
     Ok(())
 }
 
+pub fn run(info: &ClInfo) -> Result<(), io::Error> {
+   // write to the basic file 
+    write_basic_file(&info)?;
 
-
-
-
-
+    Ok(())
+}
 
 #[cfg(test)]
 mod tests {
