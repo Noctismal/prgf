@@ -10,7 +10,7 @@ needed already in it so you could call prgf and imeaditely run it!
 
 ## C exmaple
 
-'''c annotate 
+'''
 #include <stdio.h>
 
 int main(void) {
