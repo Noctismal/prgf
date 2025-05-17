@@ -1,13 +1,27 @@
-// c e= .c
+// c .c
 #include <stdio.h>
 
 int main(void) {
-    printf("Test\n");
+    printf("Get programming \n");
 
     return 0;
 }
-// rust e= .rs
+// cpp .cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Get programming\n";
+
+    return 0;
+}
+// java .java
+public class Program {
+    public static void main(String[] args) {
+        System.out.println("Get programming\n");
+    }
+}
+// rust .rs
 fn main() {
-    println!("Test\n");
+    println!("Get programming\n");
 }
 //

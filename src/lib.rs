@@ -68,12 +68,11 @@ impl ClInfo {
         // holds file information
         let mut extension = String::new();
         let mut contents = String::new();
-
-        let mut temp_contents: Vec<String> = vec![];
         
         let mut flag = false;
 
         for line in file.lines() {
+            // this gets the extension and sets the flag to true as everything past this we need
             if line.contains(&lang) {
                 // use a helper function to get the extension out of the line
                 extension = ClInfo::get_extension(line.to_string())?;
@@ -84,19 +83,13 @@ impl ClInfo {
 
             if flag {
                 // make sure that we arent at the end of that langs area
-                if line.contains("// ") && line != lang {
+                if line.contains("// ") {
                     break;
                 }
-                // needs to be turned into a string after this for loop
-                temp_contents.push(line.to_string());
+                contents.push_str(line);
             }
         }
 
-            // merge temp_contents vec into a string
-            for line in temp_contents {
-                contents.push_str(&line);
-                contents.push('\n');
-            }
 
         Ok( FileInfo {
             extension,
@@ -110,20 +103,13 @@ impl ClInfo {
         
         // split by spaces
         let mut ext_itter = ext_line.split(" ");
-    
-        while let Some(line) = ext_itter.next() {
-            if line.contains("e=") {
-                break;
-            }
-        }
 
-        // if this returns Some(_) we have an extension
-        if let Some(extension) = ext_itter.next() {
-            Ok(extension.to_string())
-        } else {
-            // if we get to this point we couldnt find the extension
-            Err("Extension not found in langs.txt")
-        }
+        let extension = match ext_itter.nth(2) {
+            Some(ext) => ext,
+            None => return Err("Extension not found in prgf_langs.txt"),
+        };
+    
+        Ok(extension.to_string())
     } 
 
     fn write_basic_file(&self) -> Result<(), io::Error> {
@@ -145,7 +131,7 @@ mod tests {
     fn content_test_rust() {
         let file_type = String::from("rust");
 
-        let result = String::from("fn main() {\n    println!(\"Test\\n\");\n}\n//\n");
+        let result = String::from("fn main() {\n    println!(\"Get programming\\n\");\n}\n//\n");
         
         let file_info = ClInfo::get_file_info(&file_type).unwrap();
         let contents = file_info.contents;
@@ -158,7 +144,7 @@ mod tests {
     fn content_test_c() {
         let file_type = String::from("c");
 
-        let result = String::from("#include <stdio.h>\n\nint main(void) {\n    printf(\"Test\\n\");\n\n    return 0;\n}\n");
+        let result = String::from("#include <stdio.h>\n\nint main(void) {\n    printf(\"Get programming\\n\");\n\n    return 0;\n}\n");
         
         let file_info = ClInfo::get_file_info(&file_type).unwrap();
         let contents = file_info.contents;
@@ -171,7 +157,7 @@ mod tests {
     fn extension_test() {
         let result = String::from(".rs");
 
-        let extension = ClInfo::get_extension("// rust e= .rs".to_string()).unwrap();
+        let extension = ClInfo::get_extension("// rust .rs".to_string()).unwrap();
 
         assert_eq!(result, extension);
     }
