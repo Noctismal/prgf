@@ -50,7 +50,13 @@ impl ClInfo {
         ) 
     }
 
-    // Helper functions
+    pub fn run(self) -> Result<(), Box<dyn Error>> {
+        ClInfo::write_basic_file(&self);
+
+        Ok(())
+    }
+
+   // Helper functions
     
     fn get_file_info(file_type: &String) -> Result<FileInfo, Box<dyn Error>> {
         // prgf_langs holds extensions and contents for differnt languages
@@ -86,21 +92,20 @@ impl ClInfo {
             }
         }
 
-        // merge temp_contents vec into a string
-        for line in temp_contents {
-            contents.push_str(&line);
-            contents.push_str("\n");
-        }
+            // merge temp_contents vec into a string
+            for line in temp_contents {
+                contents.push_str(&line);
+                contents.push('\n');
+            }
 
-    Ok( FileInfo {
-        extension,
-        contents,
-    })
+        Ok( FileInfo {
+            extension,
+            contents,
+        })
     }
+    
 
-
-    //*
-    //* takes a string from the langs.txt file and looks for the extension by searching for e= ext
+    /// takes a string from the langs.txt file and looks for the extension by searching for e= ext
     fn get_extension(ext_line: String) -> Result<String, &'static str> {
         
         // split by spaces
@@ -120,32 +125,15 @@ impl ClInfo {
             Err("Extension not found in langs.txt")
         }
     } 
-                
-    pub fn get_arg(&self) -> &str {
-        &self.args.file_type
+
+    fn write_basic_file(&self) -> Result<(), io::Error> {
+        let mut file_name = String::from("main");
+        file_name.push_str(&self.file_info.extension);
+
+        fs::write(&file_name, &self.file_info.contents)?;
+
+        Ok(())
     }
-
-}
-
-fn write_basic_file(info: &ClInfo) -> Result<(), io::Error> {
-    let file_name = "main".to_owned();
-    println!("{file_name}");
-
- //   let contents = info.get_contents();
-
-    let mut new_conts = String::new();
-
-       fs::write(&file_name, new_conts)?;
-
-
-    Ok(())
-}
-
-pub fn run(info: &ClInfo) -> Result<(), io::Error> {
-   // write to the basic file 
-    write_basic_file(&info)?;
-
-    Ok(())
 }
 
 #[cfg(test)]
