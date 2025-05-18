@@ -19,7 +19,7 @@ print text to the screen!
 Where the program lives there should be a file called `prgf_langs.txt`               
 inside this file add the following (replacing lang and extension with the deserived 
 ```
-// {lang} {extension}
+// name extension
 ```
 
 And then bellow add the content that should be in the file.
