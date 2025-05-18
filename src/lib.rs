@@ -73,7 +73,7 @@ impl ClInfo {
 
         for line in file.lines() {
             // this gets the extension and sets the flag to true as everything past this we need
-            if line.contains(&lang) {
+            if line.starts_with(&lang) && !flag {
                 // use a helper function to get the extension out of the line
                 extension = ClInfo::get_extension(line.to_string())?;
                 
@@ -83,7 +83,7 @@ impl ClInfo {
 
             if flag {
                 // make sure that we arent at the end of that langs area
-                if line.contains("// ") {
+                if line.starts_with("//") {
                     break;
                 }
                 contents.push_str(&line.to_string());
@@ -132,7 +132,7 @@ mod tests {
     fn content_test_rust() {
         let file_type = String::from("rust");
 
-        let result = String::from("fn main() {\n    println!(\"Get programming\\n\");\n}\n//\n");
+        let result = String::from("fn main() {\n    println!(\"Get programming\\n\");\n}\n");
         
         let file_info = ClInfo::get_file_info(&file_type).unwrap();
         let contents = file_info.contents;
