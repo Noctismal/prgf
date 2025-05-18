@@ -51,7 +51,7 @@ impl ClInfo {
     }
 
     pub fn run(self) -> Result<(), Box<dyn Error>> {
-        ClInfo::write_basic_file(&self);
+        ClInfo::write_basic_file(&self)?;
 
         Ok(())
     }
@@ -86,7 +86,8 @@ impl ClInfo {
                 if line.contains("// ") {
                     break;
                 }
-                contents.push_str(line);
+                contents.push_str(&line.to_string());
+                contents.push('\n');
             }
         }
 
