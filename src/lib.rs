@@ -2,6 +2,7 @@ use std::{fs, io};
 use std::error::Error;
 
 use clap::Parser;
+use dirs::config_dir;
 
 
 /// Create a basic programming file
@@ -59,8 +60,22 @@ impl ClInfo {
    // Helper functions
     
     fn get_file_info(file_type: &String) -> Result<FileInfo, Box<dyn Error>> {
+        // get the users config directory
+        let path = match config_dir() {
+            Some(path) => path,
+            None => return Err("Couldnt find config directory".into()),
+        };
+
+        let path = match path.to_str() {
+            Some(path) => path,
+            None => return Err("Couldnt find config directory".into()),
+        };
+
+        let mut config_dir: String = String::from(path);
+        config_dir.push_str("/prgf/prgf_langs.txt");
+
         // prgf_langs holds extensions and contents for differnt languages
-        let file = fs::read_to_string("prgf_langs.txt")?;
+        let file = fs::read_to_string(config_dir)?;
        
         // the language we are seraching for
         let lang = "// ".to_owned() + file_type;

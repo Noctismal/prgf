@@ -1,8 +1,9 @@
 # prgf
 
-> [!IMPORTANT]
-> prgf comes pre installed with formatting  and extensions for c, cpp, rust, java.
-> To include more add the formatting and extension to use in prgf_langs.txt
+> [!WARNING]
+> prgf needs a file called prgf_langs.txt with configuration data in .confg/prgf 
+> to work, there is a template to get started that includes formatting for
+> c, cpp, java and rust in this repo called the same.
 
 ## About
 Prgf aims to be an easiy to modify command line tool for creating basic        
