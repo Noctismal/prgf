@@ -9,7 +9,7 @@ that should be wrote to the file upon create into a file called `prgf_langs.txt`
 system of choices config directory.
 
 ## Setup
-prgf should be installed from `crates.io` or using `cargo`
+prgf should be installed from `crates.io` or using `cargo`.
 
 Once it is installed, there is an file called `example.txt` inside.                   
 This shows the general layout for how to configure and includes config for 4 languages:
@@ -28,7 +28,7 @@ in your systems config directory and follow these guidlines.
 // language_name .extension
 ```
 
-The name an extension should be in line with the //
+The name an extension should be in line with the //.
 
 ### Declaring contents
 ```
@@ -44,7 +44,7 @@ If the line bellow this is empty add the following:
 
 An empty line with // indicates the end of the file.
 
-> [!WARNING}
+> [!WARNING]
 > because prgf uses // to determine when a files info is starting
 > and when it ends, your file cannot contain information that has // in it.
 >
