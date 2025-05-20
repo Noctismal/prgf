@@ -1,6 +1,6 @@
 [package]
 name = "prgf"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 license = "MIT"
 description = "An easy to configure CLI tool that creates files with content that the user specifies"
