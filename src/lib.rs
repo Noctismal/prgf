@@ -21,11 +21,15 @@ impl Args {
     }
 }
 
-// holds information that the program needs to 
-// use such as the contents that need to go into the file
+/// Holds information regarding program execution
+/// 
+/// This includes the name of the language, the extension and the contents to be put
+/// into the file
 #[derive(Debug)]
 pub struct ClInfo {
+    /// Holds information gathered at the command line
     args: Args,
+    /// Holds extension and contents to be put into the file being created
     file_info: FileInfo,
 }
 
@@ -37,6 +41,7 @@ struct FileInfo {
 }
 
 impl ClInfo {
+    /// Builds an instance of CLinfo with arguments from the command line
     pub fn build() -> Result<ClInfo, Box<dyn Error>> {
         // get command line arguments
         let args = Args::build();
@@ -51,6 +56,7 @@ impl ClInfo {
         ) 
     }
 
+    /// Runs the logic of the program 
     pub fn run(self) -> Result<(), Box<dyn Error>> {
         ClInfo::write_basic_file(&self)?;
 
@@ -68,24 +74,24 @@ impl ClInfo {
 
         let path = match path.to_str() {
             Some(path) => path,
-            None => return Err("Couldnt find config directory".into()),
+            None => return Err("config directory couldnt be parsed as a string".into()),
         };
 
+        // turn the path into a string and add the path to prgf_langs
         let mut config_dir: String = String::from(path);
         config_dir.push_str("/prgf/prgf_langs.txt");
 
-        // prgf_langs holds extensions and contents for differnt languages
         let file = fs::read_to_string(config_dir)?;
        
-        // the language we are seraching for
+        // creates a string for the // <lang> we are looking for
         let lang = "// ".to_owned() + file_type;
 
-        // holds file information
         let mut extension = String::new();
         let mut contents = String::new();
         
+        // gets file information, ending at the first instance of // after the one we are looking
+        // for
         let mut flag = false;
-
         for line in file.lines() {
             // this gets the extension and sets the flag to true as everything past this we need
             if line.starts_with(&lang) && !flag {
@@ -114,7 +120,7 @@ impl ClInfo {
     }
     
 
-    /// takes a string from the langs.txt file and looks for the extension by searching for e= ext
+    /// Parses the line given to get the extension of the file
     fn get_extension(ext_line: String) -> Result<String, &'static str> {
         
         // split by spaces
@@ -128,6 +134,7 @@ impl ClInfo {
         Ok(extension.to_string())
     } 
 
+    /// Creates a file with the name main and the correct extension and writes the contents to it
     fn write_basic_file(&self) -> Result<(), io::Error> {
         let mut file_name = String::from("main");
         file_name.push_str(&self.file_info.extension);

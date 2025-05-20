@@ -2,6 +2,12 @@
 name = "prgf"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+description = "An easy to configure CLI tool that creates files with content that the user specifies"
+readme = "README.md"
+repository = "https://github.com/Noctismal/prgf"
+keywords = ["file creation"]
+categories  ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.38", features = ["derive"] }
