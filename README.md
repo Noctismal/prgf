@@ -1,57 +1,66 @@
 # prgf
 
-> [!WARNING]
-> prgf needs a file called prgf_langs.txt with configuration data in .confg/prgf 
-> to work, there is a template to get started that includes formatting for
-> c, cpp, java and rust in this repo called the same.
+## About 
+Prgf aims to be an easy to modify command line utility.
 
-## About
-Prgf aims to be an easiy to modify command line tool for creating basic        
-programming files.
+It allows users to create "bog standered" file of any kind.         
+Simply add the name of the file type, the extension and the contents             
+that should be wrote to the file upon create into a file called `prgf_langs.txt` in your                
+system of choices config directory.
 
-"What is a basic programming file?"
+## Setup
+prgf should be installed from `crates.io` or using `cargo`
 
-A basic programming file in this sense means a file filled with all the boiler plate                
-needed already in it so you could call prgf and run the main file it created and have it 
-print text to the screen!
+Once it is installed, there is an file called `example.txt` inside.                   
+This shows the general layout for how to configure and includes config for 4 languages:
 
-## Modifying to add more languages
+- c 
+- cpp
+- java
+- rust
 
-Where the program lives there should be a file called `prgf_langs.txt`               
-inside this file add the following (replacing lang and extension with the deserived 
+## Adding more languages
+To add more languages to prgf create/modify the `prgf_langs` file        
+in your systems config directory and follow these guidlines.
+
+### Declaring language name and extension
 ```
-// name extension
+// language_name .extension
 ```
 
-And then bellow add the content that should be in the file.
+The name an extension should be in line with the //
 
-If what you have added is at the end of the file make sure that you add // to the line bellow                 
-the content.
-
-### Python example
+### Declaring contents
 ```
-// python .py
-if __name__ == __main__:
-    print("Get programming\n")
+// langauge_name .extension
+bellow the line starting with // name .extension  
+you should put anything that should be in the file during creation
+```
+
+If the line bellow this is empty add the following:
+```
 //
 ```
 
+An empty line with // indicates the end of the file.
+
+> [!WARNING}
+> because prgf uses // to determine when a files info is starting
+> and when it ends, your file cannot contain information that has // in it.
+>
+> This will possibly be changed if i dont abondon the project here
+
 ## Example
-
-To make a basic c file enter this in the terminal once the program is added to your path
+Here is a basic example of how to configure prfg to make a basic python            
+file:
 
 ```
-$ prgf -f c 
+// python .py
+if __name__ == __main__:
+    print("Get programming.\n")
 ```
 
-This will give you a file called `main.c` that looks like this
-
-```c 
-#include <stdio.h>
-
-int main(void) {
-    printf("Test\n");
-
-    return 0;
-}
-```
+## Footnote
+This is the first project i have created in the rust       
+programming language and i would love any feed back on how to make      
+my code more *rustic*.
