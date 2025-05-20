@@ -19,6 +19,25 @@ This shows the general layout for how to configure and includes config for 4 lan
 - java
 - rust
 
+## Usage
+prgf has one flag which is `-f` and a file type follows it
+
+```
+$ prgf -f c 
+```
+
+if you are using the example as a config it will produce the following `main.c` file
+
+```c 
+#include <stdio.h>
+
+int main(void) {
+    printf("Get programming.\n");
+
+    return 0;
+}
+```
+
 ## Adding more languages
 To add more languages to prgf create/modify the `prgf_langs` file        
 in your systems config directory and follow these guidlines.
