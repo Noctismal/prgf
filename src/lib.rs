@@ -7,11 +7,14 @@ use dirs::config_dir;
 
 /// Create a basic programming file
 #[derive(Parser, Debug)]
-#[command(version, after_help = "Supported languages\n\tc\n\trust")]
+#[command(version)]
 struct Args {
     /// name of the language you wnat to make a file for
     #[arg(short, long)]
-    file_type: String,    
+    file_type: String,
+
+    #[arg(short, long, required(false))]
+    project: Option<String>,
 }
 
 impl Args {

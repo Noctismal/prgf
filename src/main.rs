@@ -10,6 +10,8 @@ fn main() {
         process::exit(1);
     });
 
+    println!("{:?}", info);
+
     if let Err(err) = info.run() {
         // if err is encountered whie running print and exit
         eprintln!("Application error: {err}");
