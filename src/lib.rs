@@ -61,7 +61,11 @@ impl ClInfo {
 
     /// Runs the logic of the program 
     pub fn run(self) -> Result<(), Box<dyn Error>> {
-        ClInfo::write_basic_file(&self)?;
+        // see if the user wants a project or a basic file
+        match self.args.project {
+            Some(_) => self.make_project()?,
+            None => self.write_basic_file()?,
+        };
 
         Ok(())
     }
@@ -144,6 +148,11 @@ impl ClInfo {
 
         fs::write(&file_name, &self.file_info.contents)?;
 
+        Ok(())
+    }
+
+    /// Creates a project directory with the name supplied or my_new_proj if none supplied
+    fn make_project(&self) -> Result<(), io::Error> {
         Ok(())
     }
 }
