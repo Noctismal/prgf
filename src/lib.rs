@@ -154,7 +154,7 @@ impl ClInfo {
     /// Creates a project directory with the name supplied or my_new_proj if none supplied
     fn make_project(&self, prg_name: String) -> Result<(), Box<dyn Error>> {
         // get the file path for where the file are 
-        let mut file_path = path::PathBuf::from(prg_name).join("/src");
+        let file_path = path::PathBuf::from(prg_name);
 
         // this makes the project directory and the src directory
         fs::create_dir_all(&file_path)?;
@@ -163,9 +163,7 @@ impl ClInfo {
         let mut file_name = String::from("main");
         file_name.push_str(&self.file_info.extension);
         
-        file_path.join(file_name);
-
-        fs::write(&file_path, &self.file_info.contents);
+        fs::write(file_path.join(file_name), &self.file_info.contents)?;
 
         Ok(())
     }
