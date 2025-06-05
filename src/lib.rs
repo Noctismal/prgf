@@ -154,7 +154,7 @@ impl ClInfo {
     /// Creates a project directory with the name supplied or my_new_proj if none supplied
     fn make_project(&self, prg_name: String) -> Result<(), Box<dyn Error>> {
         // get the file path for where the file are 
-        let file_path = path::PathBuf::from(prg_name);
+        let file_path = path::PathBuf::from(prg_name).join("src");
 
         // this makes the project directory and the src directory
         fs::create_dir_all(&file_path)?;
