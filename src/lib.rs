@@ -1,4 +1,4 @@
-use std::{fs, io};
+use std::{fs, io, path};
 use std::error::Error;
 
 use clap::Parser;
@@ -6,14 +6,14 @@ use dirs::config_dir;
 
 
 /// Create a basic programming file
-#[derive(Parser, Debug)]
+#[derive(Parser, Debug, Clone)]
 #[command(version)]
 struct Args {
     /// name of the language you wnat to make a file for
     #[arg(short, long)]
     file_type: String,
 
-    #[arg(short, long, required(false))]
+    #[arg(short, long)]
     project: Option<String>,
 }
 
@@ -63,8 +63,8 @@ impl ClInfo {
     pub fn run(self) -> Result<(), Box<dyn Error>> {
         // see if the user wants a project or a basic file
         match self.args.project {
-            Some(_) => self.make_project()?,
-            None => self.write_basic_file()?,
+            Some(ref name) => &self.make_project(name.to_string())?,
+            None => &self.write_basic_file()?,
         };
 
         Ok(())
@@ -152,7 +152,21 @@ impl ClInfo {
     }
 
     /// Creates a project directory with the name supplied or my_new_proj if none supplied
-    fn make_project(&self) -> Result<(), io::Error> {
+    fn make_project(&self, prg_name: String) -> Result<(), Box<dyn Error>> {
+        // get the file path for where the file are 
+        let mut file_path = path::PathBuf::from(prg_name).join("/src");
+
+        // this makes the project directory and the src directory
+        fs::create_dir_all(&file_path)?;
+
+        // make the file name
+        let mut file_name = String::from("main");
+        file_name.push_str(&self.file_info.extension);
+        
+        file_path.join(file_name);
+
+        fs::write(&file_path, &self.file_info.contents);
+
         Ok(())
     }
 }
